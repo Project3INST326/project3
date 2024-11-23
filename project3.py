@@ -115,3 +115,62 @@ if __name__ == "__main__":
     caregiver1.update_availability("Monday", "AM", "available")
     caregiver1.update_contact(phone="555-555-5555")
     caregiver1.display_details()
+    
+    #Mikias's Code
+    import calendar
+import random
+
+people = ["Abraham", "Aaron", "Max", "David", "Ella", "Frank"]
+hours_worked = {name: 0 for name in people}
+shifts = ["7:00AM - 1:00PM", "1:00PM - 7:00PM"]
+hourly_rate = 20 
+shift_duration = 6 
+
+def generate_schedule(year, month):
+    num_days = calendar.monthrange(year, month)[1] 
+    schedule = {}
+
+    for day in range(1, num_days + 1):
+        schedule[day] = {}
+
+ 
+        for shift in shifts:
+            assigned_caregiver = random.choice(people)
+            schedule[day][shift] = assigned_caregiver
+
+            hours_worked[assigned_caregiver] += shift_duration
+
+    return schedule
+
+def print_schedule(schedule, year, month):
+    print(f"\nCaregiver Schedule for {calendar.month_name[month]} {year}")
+    for day, shifts in schedule.items():
+        print(f"Day {day}:")
+        for shift, caregiver in shifts.items():
+            print(f"  {shift}: {caregiver}")
+        print()
+
+def generate_pay_report():
+    weekly_report = ""
+    monthly_total = 0
+
+    for caregiver in people:
+        weekly_pay = hours_worked[caregiver] * hourly_rate
+        weekly_report += f"{caregiver}: {hours_worked[caregiver]} hours worked, ${weekly_pay} earned\n"
+        monthly_total += weekly_pay
+
+    weekly_report += f"\nTotal Weekly Pay: ${monthly_total}"
+
+    with open("pay_report.txt", "w") as file:
+        file.write(weekly_report)
+
+    print("Pay report generated successfully.")
+
+year = int(input("Enter the year: "))
+month = int(input("Enter the month (1-12): "))
+
+schedule = generate_schedule(year, month)
+
+print_schedule(schedule, year, month)
+
+generate_pay_report()
